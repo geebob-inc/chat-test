@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Geebob-Inc Chat Portal</title>
+  <title>Geebob-Inc Live Chat</title>
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       display: flex;
       height: 100vh;
     }
 
-    /* Sidebar */
     .sidebar {
       width: 300px;
       background: #0f0f0f;
@@ -21,27 +20,13 @@
       overflow-y: auto;
     }
 
-    .sidebar h2 {
-      margin-top: 0;
-      font-size: 18px;
-      border-bottom: 1px solid #333;
-      padding-bottom: 8px;
-    }
-
     .sidebar a {
       display: block;
       color: #4fc3f7;
-      text-decoration: none;
       margin: 10px 0;
-      padding: 6px;
-      border-radius: 4px;
+      text-decoration: none;
     }
 
-    .sidebar a:hover {
-      background: #1c1c1c;
-    }
-
-    /* Chat */
     .chat {
       flex: 1;
       display: flex;
@@ -60,11 +45,9 @@
       margin: 8px 0;
       padding: 10px;
       border-radius: 6px;
-      word-wrap: break-word;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    .input-area {
+    .input {
       display: flex;
       padding: 10px;
       background: #ddd;
@@ -73,101 +56,86 @@
     input {
       flex: 1;
       padding: 10px;
-      border: none;
-      border-radius: 4px;
     }
 
     button {
       margin-left: 8px;
-      padding: 10px 14px;
-      border: none;
-      background: #333;
-      color: white;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    button:hover {
-      background: #000;
-    }
-
-    a.link {
-      color: #1565c0;
+      padding: 10px;
     }
   </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR LINKS -->
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>Geebob-Inc Webpages</h2>
+  <h2>Geebob-Inc Pages</h2>
 
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat/" target="_blank">
-    Arena UFO Combat
-  </a>
-
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-for-mobile/" target="_blank">
-    Arena UFO Combat mobile
-  </a>
-
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-2-players-verison/" target="_blank">
-    two player Arena UFO Combat
-  </a>
-
-  <a href="https://geebob-inc.github.io/text/" target="_blank">
-    Text Bouncer
-  </a>
-
-  <a href="https://geebob-inc.github.io/profile-generator/" target="_blank">
-    Character Generator
-  </a>
-
-  <a href="https://geebob-inc.github.io/the-Saint-Web/" target="_blank">
-    Saint Web
-  </a>
-
-  <a href="https://geebob-inc.github.io/coupon-price/" target="_blank">
-    Coupon Calculator
-  </a>
+  <a href="https://geebob-inc.github.io/UFO_Arena-Combat/" target="_blank">Arena UFO Combat</a>
+  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-for-mobile/" target="_blank">Arena UFO Combat mobile</a>
+  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-2-players-verison/" target="_blank">two player Arena UFO Combat</a>
+  <a href="https://geebob-inc.github.io/text/" target="_blank">Text Bouncer</a>
+  <a href="https://geebob-inc.github.io/profile-generator/" target="_blank">Character Generator</a>
+  <a href="https://geebob-inc.github.io/the-Saint-Web/" target="_blank">Saint Web</a>
+  <a href="https://geebob-inc.github.io/coupon-price/" target="_blank">Coupon Calculator</a>
 </div>
 
 <!-- CHAT -->
 <div class="chat">
   <div id="messages" class="messages"></div>
 
-  <div class="input-area">
-    <input id="input" type="text" placeholder="Type a message or paste a link..." />
-    <button onclick="sendMessage()">Send</button>
+  <div class="input">
+    <input id="msg" placeholder="Type message..." />
+    <button onclick="send()">Send</button>
   </div>
 </div>
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
 <script>
-  function linkify(text) {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, url =>
-      `<a class="link" href="${url}" target="_blank">${url}</a>`
-    );
-  }
+  // 🔥 PUT YOUR FIREBASE CONFIG HERE
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "XXXX",
+    appId: "XXXX"
+  };
 
-  function sendMessage() {
-    const input = document.getElementById("input");
-    const messages = document.getElementById("messages");
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database().ref("chat");
 
+  const messagesDiv = document.getElementById("messages");
+
+  function send() {
+    const input = document.getElementById("msg");
     if (!input.value.trim()) return;
 
-    const div = document.createElement("div");
-    div.className = "message";
-    div.innerHTML = linkify(input.value);
-
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
+    db.push({
+      text: input.value,
+      time: Date.now()
+    });
 
     input.value = "";
   }
 
-  document.getElementById("input").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") sendMessage();
+  db.on("child_added", (snapshot) => {
+    const msg = snapshot.val();
+
+    const div = document.createElement("div");
+    div.className = "message";
+    div.textContent = msg.text;
+
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+
+  document.getElementById("msg").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") send();
   });
 </script>
 
