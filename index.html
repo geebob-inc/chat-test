@@ -1,169 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Geebob webpages & notes</title>
+<meta charset="UTF-8">
+<title>Geebob webpages & notes</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      display: flex;
-      height: 100vh;
-    }
+<style>
 
-    /* Sidebar */
-    .sidebar {
-      width: 280px;
-      background: green;
-      color: black;
-      padding: 15px;
-      overflow-y: auto;
-    }
+body{
+  margin:0;
+  font-family:sans-serif;
+  display:flex;
+  height:100vh;
+}
 
-    .sidebar a {
-      display: block;
-      color: white;
-      margin: 10px 0;
-      text-decoration: none;
-    }
+/* SIDEBAR */
 
-    /* Main */
-    .main {
-      flex: 1;
-      background: #f4f4f4;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-    }
+.sidebar{
+  width:280px;
+  background:green;
+  color:black;
+  padding:15px;
+  overflow-y:auto;
+}
 
-    h2 {
-      margin-top: 0;
-    }
+.sidebar a{
+  display:block;
+  color:white;
+  margin:10px 0;
+  text-decoration:none;
+}
 
-    .input-area {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
+/* MAIN */
 
-    input {
-      flex: 1;
-      padding: 10px;
-    }
+.main{
+  flex:1;
+  background:#f4f4f4;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+}
 
-    button {
-      padding: 10px 15px;
-      cursor: pointer;
-    }
+h2{
+  margin-top:0;
+}
 
-    .note {
-      background: white;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+.input-area{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+  align-items:flex-start;
+}
 
-    .delete {
-      background: red;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
+/* TEXTAREA */
 
-    .note-text {
-      flex: 1;
-    }
-  </style>
+textarea{
+  flex:1;
+  padding:10px;
+  min-height:100px;
+  resize:vertical;
+  font-size:16px;
+  font-family:sans-serif;
+
+  /* FORCE WRAP */
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:break-all;
+}
+
+/* BUTTONS */
+
+button{
+  padding:10px 15px;
+  cursor:pointer;
+}
+
+.delete{
+  background:red;
+  color:white;
+  border:none;
+  padding:6px 10px;
+  cursor:pointer;
+  border-radius:4px;
+}
+
+/* NOTES */
+
+.note{
+  background:white;
+  padding:12px;
+  margin:8px 0;
+  border-radius:6px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.1);
+}
+
+.note-text{
+  flex:1;
+
+  /* FORCE BREAKS NO MATTER WHAT */
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:break-all;
+}
+
+</style>
 </head>
 
 <body>
 
-<!-- SIDEBAR LINKS -->
+<!-- SIDEBAR -->
+
 <div class="sidebar">
-  <h3>Geebob-Inc Pages</h3>
 
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat/" target="_blank">Arena UFO Combat</a>
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-for-mobile/" target="_blank">Mobile Combat</a>
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-2-players-verison/" target="_blank">2 Player Combat</a>
-  <a href="https://geebob-inc.github.io/text/" target="_blank">Text Bouncer</a>
-  <a href="https://geebob-inc.github.io/profile-generator/" target="_blank">Character Generator</a>
-  <a href="https://geebob-inc.github.io/the-Saint-Web/" target="_blank">Saint Web</a>
-  <a href="https://geebob-inc.github.io/coupon-price/" target="_blank">Coupon Calculator</a>
+<h3>Geebob-Inc Pages</h3>
 
-   <!--- MORE LINKS HERE 
+<a href="https://geebob-inc.github.io/UFO_Arena-Combat/" target="_blank">Arena UFO Combat</a>
 
-<li><a href="Link here"> title </a></li> 
-<li><a href="Link here"> title </a></li> 
-<li><a href="Link here"> title </a></li>  
-<li><a href="Link here"> title </a></li> 
-     </ul> 
-    --->
+<a href="https://geebob-inc.github.io/UFO_Arena-Combat-for-mobile/" target="_blank">Mobile Combat</a>
+
+<a href="https://geebob-inc.github.io/UFO_Arena-Combat-2-players-verison/" target="_blank">2 Player Combat</a>
+
+<a href="https://geebob-inc.github.io/text/" target="_blank">Text Bouncer</a>
+
+<a href="https://geebob-inc.github.io/profile-generator/" target="_blank">Character Generator</a>
+
+<a href="https://geebob-inc.github.io/the-Saint-Web/" target="_blank">Saint Web</a>
+
+<a href="https://geebob-inc.github.io/coupon-price/" target="_blank">Coupon Calculator</a>
+
 </div>
 
-<!-- MAIN NOTES APP -->
+<!-- MAIN -->
+
 <div class="main">
-  <h2> 🗒Notes🗒 </h2>
 
-  <div class="input-area">
-    <input id="noteInput" placeholder="Write a note..." />
-    <button onclick="addNote()">Add</button>
-  </div>
+<h2>🗒 Notes 🗒</h2>
 
-  <div id="notesList"></div>
+<div class="input-area">
+
+<textarea
+id="noteInput"
+placeholder="Write a note..."
+></textarea>
+
+<button onclick="addNote()">Add</button>
+
+</div>
+
+<div id="notesList"></div>
+
 </div>
 
 <script>
-  // Load saved notes
-  let notes = JSON.parse(localStorage.getItem("geebob_notes")) || [];
 
-  function saveNotes() {
-    localStorage.setItem("geebob_notes", JSON.stringify(notes));
-  }
+// LOAD NOTES
 
-  function renderNotes() {
-    const list = document.getElementById("notesList");
-    list.innerHTML = "";
+let notes =
+JSON.parse(localStorage.getItem("geebob_notes"))
+|| [];
 
-    notes.forEach((note, index) => {
-      const div = document.createElement("div");
-      div.className = "note";
+// SAVE NOTES
 
-      div.innerHTML = `
-        <div class="note-text">${note}</div>
-        <button class="delete" onclick="deleteNote(${index})">X</button>
-      `;
+function saveNotes(){
 
-      list.appendChild(div);
-    });
-  }
+  localStorage.setItem(
+    "geebob_notes",
+    JSON.stringify(notes)
+  );
 
-  function addNote() {
-    const input = document.getElementById("noteInput");
-    if (!input.value.trim()) return;
+}
 
-    notes.push(input.value);
-    input.value = "";
+// RENDER NOTES
 
-    saveNotes();
-    renderNotes();
-  }
+function renderNotes(){
 
-  function deleteNote(index) {
-    notes.splice(index, 1);
-    saveNotes();
-    renderNotes();
-  }
+  const list =
+  document.getElementById("notesList");
+
+  list.innerHTML = "";
+
+  notes.forEach((note,index)=>{
+
+    const div =
+    document.createElement("div");
+
+    div.className = "note";
+
+    div.innerHTML = `
+      <div class="note-text">
+        ${note}
+      </div>
+
+      <button
+      class="delete"
+      onclick="deleteNote(${index})">
+      X
+      </button>
+    `;
+
+    list.appendChild(div);
+
+  });
+
+}
+
+// ADD NOTE
+
+function addNote(){
+
+  const input =
+  document.getElementById("noteInput");
+
+  if(!input.value.trim()) return;
+
+  notes.push(input.value);
+
+  input.value = "";
+
+  saveNotes();
 
   renderNotes();
+
+}
+
+// DELETE NOTE
+
+function deleteNote(index){
+
+  notes.splice(index,1);
+
+  saveNotes();
+
+  renderNotes();
+
+}
+
+// START
+
+renderNotes();
+
 </script>
 
+<p>
+<em><strong>
+©2026 by Geebob inc.
+</strong></em>
+Thanks, God bless
+</p>
+
 </body>
-    <p> <em><strong>©2026 by Geebob inc.</strong></em> Thanks, God bless</p>
 </html>
