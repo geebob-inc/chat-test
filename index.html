@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Geebob-Inc Live Chat</title>
+  <title>Geebob Notes & Reminders</title>
 
   <style>
     body {
@@ -12,9 +12,10 @@
       height: 100vh;
     }
 
+    /* Sidebar */
     .sidebar {
-      width: 300px;
-      background: #0f0f0f;
+      width: 280px;
+      background: #111;
       color: white;
       padding: 15px;
       overflow-y: auto;
@@ -27,30 +28,23 @@
       text-decoration: none;
     }
 
-    .chat {
+    /* Main */
+    .main {
       flex: 1;
+      background: #f4f4f4;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      background: #f4f4f4;
     }
 
-    .messages {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
+    h2 {
+      margin-top: 0;
     }
 
-    .message {
-      background: white;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 6px;
-    }
-
-    .input {
+    .input-area {
       display: flex;
-      padding: 10px;
-      background: #ddd;
+      gap: 10px;
+      margin-bottom: 15px;
     }
 
     input {
@@ -59,84 +53,106 @@
     }
 
     button {
-      margin-left: 8px;
-      padding: 10px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    .note {
+      background: white;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .delete {
+      background: red;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .note-text {
+      flex: 1;
     }
   </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR LINKS -->
 <div class="sidebar">
-  <h2>Geebob-Inc Pages</h2>
+  <h3>Geebob-Inc Pages</h3>
 
   <a href="https://geebob-inc.github.io/UFO_Arena-Combat/" target="_blank">Arena UFO Combat</a>
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-for-mobile/" target="_blank">Arena UFO Combat mobile</a>
-  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-2-players-verison/" target="_blank">two player Arena UFO Combat</a>
+  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-for-mobile/" target="_blank">Mobile Combat</a>
+  <a href="https://geebob-inc.github.io/UFO_Arena-Combat-2-players-verison/" target="_blank">2 Player Combat</a>
   <a href="https://geebob-inc.github.io/text/" target="_blank">Text Bouncer</a>
   <a href="https://geebob-inc.github.io/profile-generator/" target="_blank">Character Generator</a>
   <a href="https://geebob-inc.github.io/the-Saint-Web/" target="_blank">Saint Web</a>
   <a href="https://geebob-inc.github.io/coupon-price/" target="_blank">Coupon Calculator</a>
 </div>
 
-<!-- CHAT -->
-<div class="chat">
-  <div id="messages" class="messages"></div>
+<!-- MAIN NOTES APP -->
+<div class="main">
+  <h2>🧠 Notes & Reminders</h2>
 
-  <div class="input">
-    <input id="msg" placeholder="Type message..." />
-    <button onclick="send()">Send</button>
+  <div class="input-area">
+    <input id="noteInput" placeholder="Write a note or reminder..." />
+    <button onclick="addNote()">Add</button>
   </div>
+
+  <div id="notesList"></div>
 </div>
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
 <script>
-  // 🔥 PUT YOUR FIREBASE CONFIG HERE
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "XXXX",
-    appId: "XXXX"
-  };
+  // Load saved notes
+  let notes = JSON.parse(localStorage.getItem("geebob_notes")) || [];
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database().ref("chat");
-
-  const messagesDiv = document.getElementById("messages");
-
-  function send() {
-    const input = document.getElementById("msg");
-    if (!input.value.trim()) return;
-
-    db.push({
-      text: input.value,
-      time: Date.now()
-    });
-
-    input.value = "";
+  function saveNotes() {
+    localStorage.setItem("geebob_notes", JSON.stringify(notes));
   }
 
-  db.on("child_added", (snapshot) => {
-    const msg = snapshot.val();
+  function renderNotes() {
+    const list = document.getElementById("notesList");
+    list.innerHTML = "";
 
-    const div = document.createElement("div");
-    div.className = "message";
-    div.textContent = msg.text;
+    notes.forEach((note, index) => {
+      const div = document.createElement("div");
+      div.className = "note";
 
-    messagesDiv.appendChild(div);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  });
+      div.innerHTML = `
+        <div class="note-text">${note}</div>
+        <button class="delete" onclick="deleteNote(${index})">X</button>
+      `;
 
-  document.getElementById("msg").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") send();
-  });
+      list.appendChild(div);
+    });
+  }
+
+  function addNote() {
+    const input = document.getElementById("noteInput");
+    if (!input.value.trim()) return;
+
+    notes.push(input.value);
+    input.value = "";
+
+    saveNotes();
+    renderNotes();
+  }
+
+  function deleteNote(index) {
+    notes.splice(index, 1);
+    saveNotes();
+    renderNotes();
+  }
+
+  renderNotes();
 </script>
 
 </body>
